@@ -2,7 +2,7 @@
     "model_config": {
         "factors": [5, 5, 3, 2, 2],
         "upsampling_preconv_out_channels": 768,
-        "upsampling_out_channels": [512, 512, 256, 128, 128],
+        "upsampling_out_channels": [256, 256, 128, 64, 64],
         "upsampling_dilations": [
             [1, 2, 1, 2],
             [1, 2, 1, 2],
@@ -11,13 +11,13 @@
             [1, 2, 4, 8]
         ],
         "downsampling_preconv_out_channels": 32,
-        "downsampling_out_channels": [128, 128, 256, 512],
+        "downsampling_out_channels": [64, 64, 128, 256],
         "downsampling_dilations": [
             [1, 2, 4], [1, 2, 4], [1, 2, 4], [1, 2, 4]
         ]
     },
     "data_config": {
-        "sample_rate": 22050,
+        "sample_rate": 16000,
         "n_fft": 1024,
         "win_length": 1024,
         "hop_length": 300,
