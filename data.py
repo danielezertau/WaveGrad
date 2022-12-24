@@ -1,4 +1,6 @@
 import numpy as np
+from torchaudio import transforms
+
 np.random.seed(1234)
 
 import torch
@@ -28,6 +30,9 @@ class AudioDataset(torch.utils.data.Dataset):
 
     def load_audio_to_torch(self, audio_path):
         audio, sample_rate = torchaudio.load(audio_path)
+        transform = transforms.Resample(sample_rate, self.sample_rate)
+        audio = transform(audio[0])
+        sample_rate = self.sample_rate
         # To ensure upsampling/downsampling will be processed in a right way for full signals
         if not self.training:
             p = (audio.shape[-1] // self.hop_length + 1) * self.hop_length - audio.shape[-1]
