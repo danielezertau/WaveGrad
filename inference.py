@@ -47,7 +47,7 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load(args.checkpoint_path)['model'], strict=False)
 
     # Set noise schedule
-    noise_schedule = torch.load(args.noise_schedule_path)
+    noise_schedule = torch.tensor(torch.load(args.noise_schedule_path))
     n_iter = noise_schedule.shape[-1]
     init_fn = lambda **kwargs: noise_schedule
     init_kwargs = {'steps': n_iter}
