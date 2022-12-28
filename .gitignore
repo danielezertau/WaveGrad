@@ -1,5 +1,6 @@
 dataset
 .idea/
+results/
 
 **/*test.ipynb
 **/*logs
