@@ -26,7 +26,7 @@ def run_training(rank, config, args):
 
     show_message('Initializing logger...', verbose=args.verbose, rank=rank)
     logger = Logger(config, rank=rank)
-    
+
     show_message('Initializing model...', verbose=args.verbose, rank=rank)
     model = WaveGrad(config).cuda()
     show_message(f'Number of WaveGrad parameters: {model.nparams}', verbose=args.verbose, rank=rank)
@@ -113,7 +113,7 @@ def run_training(rank, config, args):
 
                 batch = batch.cuda()
                 mels = mel_fn(batch)
-                
+
                 if config.training_config.use_fp16:
                     with torch.cuda.amp.autocast():
                         loss = (model if args.n_gpus == 1 else model.module).compute_loss(mels, batch)
@@ -122,7 +122,7 @@ def run_training(rank, config, args):
                 else:
                     loss = (model if args.n_gpus == 1 else model.module).compute_loss(mels, batch)
                     loss.backward()
-                
+
                 grad_norm = torch.nn.utils.clip_grad_norm_(
                     parameters=model.parameters(),
                     max_norm=config.training_config.grad_clip_threshold
@@ -139,7 +139,7 @@ def run_training(rank, config, args):
                     'grad_norm': grad_norm.item()
                 }
                 logger.log_training(iteration, loss_stats, verbose=False)
-                
+
                 iteration += 1
 
             # Test step after epoch on rank==0 GPU
@@ -188,7 +188,7 @@ def run_training(rank, config, args):
                         average_rtf += compute_rtf(
                             y_0_hat, generation_time, config.data_config.sample_rate
                         )
-                        
+
                         test_l1_loss += torch.nn.L1Loss()(y_0_hat, test_sample).item()
                         test_l1_spec_loss += torch.nn.L1Loss()(y_0_hat_mel, test_mel).item()
 
@@ -234,7 +234,7 @@ def init_distributed(rank, n_gpus, dist_config):
 
     os.environ['MASTER_ADDR'] = dist_config.MASTER_ADDR
     os.environ['MASTER_PORT'] = dist_config.MASTER_PORT
-    
+
     torch.distributed.init_process_group(
         backend='nccl', world_size=n_gpus, rank=rank
     )
